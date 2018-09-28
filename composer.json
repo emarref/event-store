@@ -1,0 +1,25 @@
+{
+  "name": "emarref/event-store",
+  "description": "A PHP client for the Event Store HTTP API.",
+  "type": "library",
+  "require": {
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^6.3",
+    "ramsey/uuid": "^3.8"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.3"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Malcolm Fell",
+      "email": "emarref@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Emarref\\EventStore\\": "src/"
+    }
+  }
+}
