@@ -1,4 +1,7 @@
-Consume the HTTP API exposed by an [Event Store](https://eventstore.org) server. 
+Consume the HTTP API exposed by an [Event Store](https://eventstore.org) server.
+
+- Retrieves all event data automatically.
+- Executes multiple requests to the event store in parallel
 
 ### Install
 
