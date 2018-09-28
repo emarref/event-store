@@ -69,7 +69,7 @@ class Client
 
         $pool = new Pool($this->http, $requests, [
             'concurrency' => $concurrency,
-            'fulfilled'   => function ($response, $index) use (&$responses) {
+            'fulfilled'   => function (ResponseInterface $response, $index) use (&$responses) {
                 $responses[$index] = $response;
             },
             'rejected'    => function ($reason, $index) {
