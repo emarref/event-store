@@ -10,8 +10,9 @@ composer require emarref/event-store
 
 ```php
 // Create a Guzzle client
-// N.B it is strongly recommended to implement a caching layer in your Guzzle client to take advantage of the
-// cache headers returned by the server, and significantly reduce the load on your event store. 
+// N.B it is strongly recommended to implement a caching layer in your Guzzle client to take advantage
+// of the cache headers returned by the server, and significantly reduce the load on your event store.
+// @see https://github.com/Kevinrob/guzzle-cache-middleware 
 $http = $http = new \GuzzleHttp\Client([
     'base_uri' => 'http://localhost:2113/',
     'timeout'  => 2,
