@@ -172,7 +172,7 @@ class Stream
                     ));
                 }
 
-                yield new Request('get', $link->getUri());
+                yield new Request('get', $link->getUri(), ['Accept' => Client::DEFAULT_CONTENT_TYPE]);
             }
         };
 
