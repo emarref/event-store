@@ -42,6 +42,8 @@ final class EventContent
     private $metadata;
 
     /**
+     * @param array $payload
+     *
      * @return EventContent
      */
     public static function fromPayload(array $payload): self
