@@ -5,16 +5,11 @@ namespace Emarref\EventStore\Endpoint;
 use Emarref\EventStore\Client;
 use Emarref\EventStore\Entity;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\stream_for;
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 
 class Stream
 {
     private const URI                = 'streams/%s';
     private const HEADER_HARD_DELETE = 'ES-HardDelete';
-    private const HEADER_EVENT_TYPE  = 'ES-EventType';
-    private const HEADER_EVENT_ID    = 'ES-EventId';
 
     /**
      * @var Client
@@ -51,27 +46,25 @@ class Stream
     }
 
     /**
-     * @param string        $type
-     * @param array         $data
-     * @param UuidInterface $id
+     * @param Entity\EventContent[] $eventContents
      */
-    public function writeEntry(string $type, array $data, UuidInterface $id = null): void
+    public function writeEntries(Entity\EventContent ...$eventContents): void
     {
-        $this->writeEvent($this->uri, $type, $data, $id);
+        $payload = \array_map(function (Entity\EventContent $eventContent) {
+            return [
+                Entity\EventContent::PAYLOAD_EVENT_ID   => $eventContent->getEventId(),
+                Entity\EventContent::PAYLOAD_EVENT_TYPE => $eventContent->getEventId(),
+                Entity\EventContent::PAYLOAD_DATA       => $eventContent->getData(),
+            ];
+        }, $eventContents);
+
+        $this->client->post($this->uri, $payload, [
+            Client::HEADER_CONTENT_TYPE => Client::CONTENT_TYPE_EVENTS,
+        ]);
     }
 
     /**
-     * @param string        $type
-     * @param array         $data
-     * @param UuidInterface $id
-     */
-    public function writeMetadata(string $type, array $data, UuidInterface $id = null): void
-    {
-        $this->writeEvent(sprintf('%s/%s', $this->uri, 'metadata'), $type, $data, $id);
-    }
-
-    /**
-     * @return Entity\Event[]
+     * @return Entity\Event[]|iterable
      */
     public function readBackwards(): iterable
     {
@@ -90,7 +83,7 @@ class Stream
     }
 
     /**
-     * @return Entity\Event[]
+     * @return Entity\Event[]|iterable
      */
     public function readForwards(): iterable
     {
@@ -195,35 +188,5 @@ class Stream
         $payload = $this->client->get($uri);
 
         return Entity\Stream::fromPayload($payload);
-    }
-
-    /**
-     * @param string             $uri
-     * @param string             $type
-     * @param array              $data
-     * @param UuidInterface|null $id
-     *
-     * @throws \Exception
-     */
-    private function writeEvent(string $uri, string $type, array $data, UuidInterface $id = null): void
-    {
-        $payload = [
-            Entity\EventContent::PAYLOAD_EVENT_ID   => ($id ?? Uuid::uuid4())->toString(),
-            Entity\EventContent::PAYLOAD_EVENT_TYPE => $type,
-            Entity\EventContent::PAYLOAD_DATA       => $data,
-        ];
-
-        $this->writeEvents($uri, [$payload]);
-    }
-
-    /**
-     * @param string $uri
-     * @param array  $payload
-     */
-    private function writeEvents(string $uri, array $payload): void
-    {
-        $this->client->post($uri, $payload, [
-            Client::HEADER_CONTENT_TYPE => Client::CONTENT_TYPE_EVENTS,
-        ]);
     }
 }

@@ -58,6 +58,23 @@ final class EventContent
     }
 
     /**
+     * @param string     $id UUID
+     * @param string     $type
+     * @param mixed|null $data
+     *
+     * @return EventContent
+     */
+    public static function create(string $id, string $type, $data = null): self
+    {
+        $self            = new self();
+        $self->eventId   = $id;
+        $self->eventType = $type;
+        $self->data      = $data;
+
+        return $self;
+    }
+
+    /**
      * @param Event $eventContent
      *
      * @return array
