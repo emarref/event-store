@@ -53,7 +53,7 @@ class Stream
         $payload = \array_map(function (Entity\EventContent $eventContent) {
             return [
                 Entity\EventContent::PAYLOAD_EVENT_ID   => $eventContent->getEventId(),
-                Entity\EventContent::PAYLOAD_EVENT_TYPE => $eventContent->getEventId(),
+                Entity\EventContent::PAYLOAD_EVENT_TYPE => $eventContent->getEventType(),
                 Entity\EventContent::PAYLOAD_DATA       => $eventContent->getData(),
             ];
         }, $eventContents);
