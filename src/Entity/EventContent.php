@@ -32,12 +32,12 @@ final class EventContent
     private $eventId;
 
     /**
-     * @var object
+     * @var mixed
      */
     private $data;
 
     /**
-     * @var object
+     * @var array
      */
     private $metadata;
 
@@ -53,16 +53,16 @@ final class EventContent
         $self->eventNumber   = (int) $payload[self::PAYLOAD_EVENT_NUMBER];
         $self->eventType     = $payload[self::PAYLOAD_EVENT_TYPE];
         $self->eventId       = $payload[self::PAYLOAD_EVENT_ID];
-        $self->data          = (object) $payload[self::PAYLOAD_DATA];
-        $self->metadata      = (object) $payload[self::PAYLOAD_METADATA];
+        $self->data          = $payload[self::PAYLOAD_DATA];
+        $self->metadata      = (array) $payload[self::PAYLOAD_METADATA];
 
         return $self;
     }
 
     /**
-     * @param string     $id UUID
-     * @param string     $type
-     * @param mixed|null $data
+     * @param string $id UUID
+     * @param string $type
+     * @param mixed  $data
      *
      * @return EventContent
      */
@@ -88,8 +88,8 @@ final class EventContent
             self::PAYLOAD_EVENT_NUMBER    => $eventContent->getEventNumber(),
             self::PAYLOAD_EVENT_TYPE      => $eventContent->getEventType(),
             self::PAYLOAD_EVENT_ID        => $eventContent->getEventId(),
-            self::PAYLOAD_DATA            => (array) $eventContent->getData(),
-            self::PAYLOAD_METADATA        => (array) $eventContent->getMetadata(),
+            self::PAYLOAD_DATA            => $eventContent->getData(),
+            self::PAYLOAD_METADATA        => $eventContent->getMetadata(),
         ], function ($value) {
             return $value !== null;
         });
@@ -136,17 +136,17 @@ final class EventContent
     }
 
     /**
-     * @return object
+     * @return mixed
      */
-    public function getData(): object
+    public function getData()
     {
         return $this->data;
     }
 
     /**
-     * @return object
+     * @return array
      */
-    public function getMetadata(): object
+    public function getMetadata(): array
     {
         return $this->metadata;
     }
